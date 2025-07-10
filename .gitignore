@@ -1,0 +1,90 @@
+  # Python
+  __pycache__/
+  *.py[cod]
+  *$py.class
+  *.so
+  .Python
+  build/
+  develop-eggs/
+  dist/
+  downloads/
+  eggs/
+  .eggs/
+  lib/
+  lib64/
+  parts/
+  sdist/
+  var/
+  wheels/
+  *.egg-info/
+  .installed.cfg
+  *.egg
+
+  # Django
+  *.log
+  local_settings.py
+  db.sqlite3
+  db.sqlite3-journal
+
+  # Virtual Environment
+  venv/
+  env/
+  ENV/
+
+  # IDE
+  .vscode/
+  .idea/
+  *.swp
+  *.swo
+  *~
+
+  # OS
+  .DS_Store
+  Thumbs.db
+  EOF
+
+  git add .gitignore README.md requirements.txt
+  git commit -m "docs: Initial project setup with documentation"
+
+  git add school_management/
+  git commit -m "feat: Add Django project configuration"
+
+  git add accounts/
+  git commit -m "feat: Implement user authentication system"
+
+  git add students/
+  git commit -m "feat: Add student management module"
+
+  git add teachers/
+  git commit -m "feat: Add teacher management module"
+
+  git add manage.py
+  git commit -m "feat: Add Django management entry point"
+
+  git remote add origin
+  https://github.com/inv-nithin007/school-management-system.git
+  git branch -M main
+  git push -u origin main --force
+*.log
+  local_settings.py
+  db.sqlite3
+  db.sqlite3-journal
+
+  # Virtual Environment
+  venv/
+  env/
+  ENV/
+
+  # IDE
+  .vscode/
+  .idea/
+  *.swp
+  *.swo
+  *~
+
+  # OS
+  .DS_Store
+  Thumbs.db
+  EOF
+
+eof
