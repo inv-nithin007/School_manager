@@ -20,6 +20,7 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
+from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,4 +29,7 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/', include('teachers.urls')),
     path('api/', include('students.urls')),
+    path('api/export/all/', views.export_all_data_csv, name='export-all-csv'),
+    path('api/export/students/', views.export_students_detailed_csv, name='export-students-detailed-csv'),
+    path('api/export/teachers/', views.export_teachers_detailed_csv, name='export-teachers-detailed-csv'),
 ]

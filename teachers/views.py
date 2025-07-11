@@ -4,10 +4,12 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
 from django.contrib.auth.models import User
+from django.http import HttpResponse
 from accounts.permissions import IsTeacherOrAdmin, IsAdminOrReadOnly
 from accounts.models import UserProfile
 from .models import Teacher
 from .serializers import TeacherSerializer, TeacherCreateSerializer
+import csv
 
 class TeacherViewSet(viewsets.ModelViewSet):
     queryset = Teacher.objects.all()
@@ -93,3 +95,39 @@ class TeacherViewSet(viewsets.ModelViewSet):
             return Response({
                 'error': 'Failed to retrieve students'
             }, status=status.HTTP_400_BAD_REQUEST)
+    
+    @action(detail=False, methods=['get'])
+    def export_csv(self, request):
+        """
+        Export all teachers to CSV file
+        """
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="teachers.csv"'
+        
+        writer = csv.writer(response)
+        
+        # Write header
+        writer.writerow([
+            'ID', 'First Name', 'Last Name', 'Email', 'Phone Number',
+            'Subject Specialization', 'Employee ID', 'Date of Joining',
+            'Status', 'Students Count', 'Created At', 'Updated At'
+        ])
+        
+        # Write data
+        for teacher in Teacher.objects.all():
+            writer.writerow([
+                teacher.id,
+                teacher.first_name,
+                teacher.last_name,
+                teacher.email,
+                teacher.phone_number,
+                teacher.subject_specialization,
+                teacher.employee_id,
+                teacher.date_of_joining,
+                teacher.status,
+                teacher.student_set.count(),
+                teacher.created_at,
+                teacher.updated_at
+            ])
+        
+        return response

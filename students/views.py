@@ -1,12 +1,15 @@
 from rest_framework import viewsets, status, filters
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
 from django.contrib.auth.models import User
+from django.http import HttpResponse
 from accounts.permissions import IsStudentOrTeacherOrAdmin, IsAdminOrReadOnly
 from accounts.models import UserProfile
 from .models import Student
 from .serializers import StudentSerializer, StudentCreateSerializer
+import csv
 
 class StudentViewSet(viewsets.ModelViewSet):
     queryset = Student.objects.all()
@@ -79,3 +82,40 @@ class StudentViewSet(viewsets.ModelViewSet):
             return Response({
                 'error': 'Failed to update student'
             }, status=status.HTTP_400_BAD_REQUEST)
+    
+    @action(detail=False, methods=['get'])
+    def export_csv(self, request):
+        """
+        Export all students to CSV file
+        """
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="students.csv"'
+        
+        writer = csv.writer(response)
+        
+        # Write header
+        writer.writerow([
+            'ID', 'First Name', 'Last Name', 'Email', 'Phone Number',
+            'Roll Number', 'Class Grade', 'Date of Birth', 'Admission Date',
+            'Status', 'Assigned Teacher', 'Created At', 'Updated At'
+        ])
+        
+        # Write data
+        for student in Student.objects.all():
+            writer.writerow([
+                student.id,
+                student.first_name,
+                student.last_name,
+                student.email,
+                student.phone_number,
+                student.roll_number,
+                student.class_grade,
+                student.date_of_birth,
+                student.admission_date,
+                student.status,
+                f"{student.assigned_teacher.first_name} {student.assigned_teacher.last_name}" if student.assigned_teacher else 'None',
+                student.created_at,
+                student.updated_at
+            ])
+        
+        return response
